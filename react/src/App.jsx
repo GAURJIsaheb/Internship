@@ -1,4 +1,4 @@
-
+// Stage 3: Task Completion Toggle
 
 "use client";
 import { useState, useEffect, useMemo } from "react";
@@ -36,14 +36,12 @@ export default function App() {
     }
   };
 
-  const handleSortTasks = (criterion) => {
-    let sortedTasks = [...tasks];
-    if (criterion === "name") {
-      sortedTasks.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (criterion === "priority") {
-      sortedTasks.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
-    }
-    setTasks(sortedTasks);
+  const handleToggleCompletion = (id) => {
+    setTasks((prevTasks) =>
+      prevTasks.map((task) =>
+        task.id === id ? { ...task, completed: !task.completed } : task
+      )
+    );
   };
 
   const filteredTasks = useMemo(
@@ -74,9 +72,15 @@ export default function App() {
         onChange={(e) => setTaskDescription(e.target.value)}
       />
       <button onClick={handleAddTask}>Add Task</button>
+
       <div>
         {filteredTasks.map((task) => (
           <div key={task.id}>
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={() => handleToggleCompletion(task.id)}
+            />
             <h3>{task.title}</h3>
             <p>{task.description}</p>
           </div>
